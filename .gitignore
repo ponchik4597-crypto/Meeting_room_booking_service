@@ -1,0 +1,19 @@
+# Окружение и пакеты
+.venv/
+/venv/
+ENV/
+env/
+
+# Кэш Python и линтеров
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Локальная база данных
+*.db
+*.db-journal
+
+# Локальные настройки IDE
+.vscode/
+.idea/
