@@ -2,7 +2,8 @@
 .venv/
 /venv/
 ENV/
-env/
+.env
+!.env.example
 
 # Кэш Python и линтеров
 __pycache__/
