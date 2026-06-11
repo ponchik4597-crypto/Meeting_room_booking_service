@@ -1,3 +1,5 @@
+import datetime
+
 from app.db.base import (
     TYPE_CHECKING,
     Base,
@@ -6,7 +8,6 @@ from app.db.base import (
     ForeignKey,
     Mapped,
     UniqueConstraint,
-    datetime,
     dt_date,
     func,
     mapped_column,
@@ -14,8 +15,8 @@ from app.db.base import (
 )
 
 if TYPE_CHECKING:
-    from app.db.models.slot import Slot
-    from app.db.models.user import User
+    from app.slot.models import Slot
+    from app.user.models import User
 
 
 class Booking(Base):

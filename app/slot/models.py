@@ -1,3 +1,5 @@
+import datetime
+
 from app.db.base import (
     TYPE_CHECKING,
     Base,
@@ -5,7 +7,6 @@ from app.db.base import (
     ForeignKey,
     Mapped,
     Time,
-    datetime,
     dt_time,
     func,
     mapped_column,
@@ -13,8 +14,8 @@ from app.db.base import (
 )
 
 if TYPE_CHECKING:
-    from app.db.models.booking import Booking
-    from app.db.models.room import Room
+    from app.booking.models import Booking
+    from app.room.models import Room
 
 
 class Slot(Base):

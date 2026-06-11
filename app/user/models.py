@@ -1,19 +1,18 @@
-from typing import Literal
+import datetime
+from typing import TYPE_CHECKING, Literal
 
 from app.db.base import (
-    TYPE_CHECKING,
     Base,
     DateTime,
     Mapped,
     String,
-    datetime,
     func,
     mapped_column,
     relationship,
 )
 
 if TYPE_CHECKING:
-    from app.db.models.booking import Booking
+    from app.booking.models import Booking
 
 
 class User(Base):

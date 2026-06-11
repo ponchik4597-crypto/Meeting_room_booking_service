@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.schemas.slot import SlotResponse
+from app.slot.schemas import SlotResponse
 
 
 class RoomBase(BaseModel):
