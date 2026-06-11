@@ -26,9 +26,8 @@ poetry run pytest -v
 ```bash
 poetry run uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
-После запуска интерактивная документация API (Swagger UI) будет доступна по адресу: `http://127.0.0`
 
-## Разработка (Команды Makefile)
+## Команды Makefile
 В проекте настроен `Makefile` для автоматизации проверок кода.
 *   `make format` — автоматически исправить форматирование кода с помощью Ruff.
 *   `make lint` — проверить код на ошибки и соответствие стилю.
@@ -36,36 +35,85 @@ poetry run uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 
 ## Запуск в Docker
 
-Для быстрой сборки зависимостей внутри контейнера используется `uv`.
-
-**Сборка Docker-образа:**
+**Сборка образа:**
 ```bash
 docker build -t meeting-room-booking .
 ```
 
-**Запуск приложения в фоновом режиме:**
+**Запуск контейнера:**
 ```bash
-docker run -d -p 8000:8000 --name meeting-room-container meeting-room-booking
+docker run -d -p 8000:8000 --env-file .env --name meeting-room-container meeting-room-booking
 ```
 
-**Просмотр логов приложения:**
+**Просмотр логов:**
 ```bash
 docker logs -f meeting-room-container
 ```
 
-**Остановка и удаление приложения:**
+**Остановка и удаление:**
 ```bash
 docker stop meeting-room-container && docker rm meeting-room-container
 ```
 
-## Проверка эндпоинтов
 
-*   Проверка статуса сервиса: `curl http://localhost:8000/`
-*   Получение списка переговорных комнат: `curl http://localhost:8000/rooms`
+## Примеры работы
+
+**Регистрация сотрудника:**
+```bash
+curl -X POST http://localhost:8000/users/register \
+  -H "Content-Type: application/json" \
+  -d '{"login": "ivan", "password": "123456", "role": "employee"}'
+```
+
+**Логин и получение JWT-токена:**
+```bash
+curl -X POST http://localhost:8000/users/login \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "username=ivan&password=123456"
+```
+* Ответ:
+```bash
+{"access_token": "eyJ...", "token_type": "bearer"}
+```
+
+**Создание комнаты (админ):**
+```bash
+curl -X POST http://localhost:8000/rooms \
+  -H "Authorization: Bearer <токен_админа>" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Конференц-зал", "capacity": 20}'
+```
+
+**Создание слота (админ):**
+```bash
+curl -X POST http://localhost:8000/slots \
+  -H "Authorization: Bearer <токен_админа>" \
+  -H "Content-Type: application/json" \
+  -d '{"room_id": 1, "time_start": "10:00", "time_end": "11:00"}'
+```
+
+**Просмотр доступных комнат на дату:**
+```bash
+curl "http://localhost:8000/rooms?date=2025-06-20"
+```
+
+**Бронирование слота:**
+```bash
+curl -X POST http://localhost:8000/bookings \
+  -H "Authorization: Bearer <токен_сотрудника>" \
+  -H "Content-Type: application/json" \
+  -d '{"slot_id": 1, "date": "2025-06-20"}'
+```
+
+**Отмена бронирования:**
+```bash
+curl -X DELETE http://localhost:8000/bookings/1 \
+  -H "Authorization: Bearer <токен_сотрудника>"
+```
 
 ## Структура проекта
-*   `app/` — исходный код веб-сервиса (FastAPI).
-*   `tests/` — автоматические юнит-тесты (Pytest).
-*   `pyproject.toml` & `poetry.lock` — конфигурация проекта и фиксация версий зависимостей.
-*   `Makefile` — команды для линтера и форматирования.
-*   `Dockerfile` — инструкция для сборки Docker-образа.
+*   `app/` — исходный код (FastAPI)
+*   `tests/` — юнит-тесты (Pytest)
+*   `pyproject.toml` & `poetry.lock` — зависимости
+*   `Makefile` — автоматизация линтинга
+*   `Dockerfile` — инструкция для сборки образа
