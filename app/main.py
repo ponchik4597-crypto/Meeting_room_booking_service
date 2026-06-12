@@ -7,10 +7,10 @@ from app.user.routers import router as user_router
 
 app = FastAPI(title="Meeting Room Booking Service")
 
-app.include_router(user_router)
-app.include_router(room_router)
-app.include_router(slot_router)
-app.include_router(booking_router)
+app.include_router(user_router, prefix="/users", tags=["Пользователи"])
+app.include_router(room_router, prefix="/rooms", tags=["Комнаты"])
+app.include_router(slot_router, prefix="/slots", tags=["Слоты"])
+app.include_router(booking_router, prefix="/bookings", tags=["Бронирования"])
 
 
 @app.get("/")

@@ -16,6 +16,8 @@ password_hash = PasswordHash.recommended()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="users/login")
 
 """Генерация JWT-токена со сроком действия"""
+
+
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
     expire = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
@@ -24,7 +26,10 @@ def create_access_token(data: dict) -> str:
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
+
 """Зависимость для проверки JWT и получения текущего пользователя"""
+
+
 async def get_current_user(
     token: str = Depends(oauth2_scheme), session: AsyncSession = Depends(get_db)
 ) -> User:
