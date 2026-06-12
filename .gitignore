@@ -3,6 +3,7 @@
 /venv/
 ENV/
 .env
+.env.test
 !.env.example
 .poetry/
 

@@ -31,7 +31,7 @@ app.include_router(slot_router, prefix="/slots", tags=["Слоты"])
 app.include_router(booking_router, prefix="/bookings", tags=["Бронирования"])
 
 
-@app.get("/", tags=["Системный"])
+@app.get("/", tags=["Системный эндпоинт"])
 def read_root():
     """эндпоинт проверки работоспособности сервиса"""
     return {"status": "ok", "message": "Meeting Room Booking API is running"}
