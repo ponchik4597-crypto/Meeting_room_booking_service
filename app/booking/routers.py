@@ -12,7 +12,7 @@ from app.db.session import get_db
 from app.slot.models import Slot
 from app.user.models import User
 
-router = APIRouter(prefix="/bookings", tags=["Bookings"])
+router = APIRouter()
 
 
 @router.post("", response_model=BookingResponse, status_code=status.HTTP_201_CREATED)
@@ -21,6 +21,7 @@ async def create_booking(
     session: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    """Эндпоинт для бронирования переговорной комнаты"""
     if booking_in.date < date.today():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -58,6 +59,7 @@ async def delete_booking(
     session: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    """Эндпоинт для отмены бронирования переговорной комнаты"""
     booking = await session.get(Booking, booking_id)
     if not booking:
         raise HTTPException(

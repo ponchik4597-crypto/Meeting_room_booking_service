@@ -1,20 +1,37 @@
-# Окружение и пакеты
+#Окружение и пакеты
 .venv/
 /venv/
 ENV/
 .env
 !.env.example
+.poetry/
 
-# Кэш Python и линтеров
+#Кэш Python, Poetry и линтеров
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 .pytest_cache/
 .ruff_cache/
+.mypy_cache/
 
-# Локальная база данных
+#Локальная база данных
 *.db
 *.db-journal
+*.sqlite
 
-# Локальные настройки IDE
-.vscode/
+#Локальные настройки IDE
 .idea/
+*.iml
+*.iws
+.pytest_cache/
+
+#Логи Docker и системы
+*.log
+logs/
+
+#Остальное
+.DS_Store
+.AppleDouble
+.LSOverride
+._*

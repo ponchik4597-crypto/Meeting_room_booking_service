@@ -14,6 +14,8 @@ class RoomCreate(RoomBase):
 
 class RoomResponse(RoomBase):
     id: int
-    slots: list[SlotResponse] = []
-
     model_config = ConfigDict(from_attributes=True)
+
+
+class RoomDetailResponse(RoomResponse):
+    slots: list[SlotResponse] = []

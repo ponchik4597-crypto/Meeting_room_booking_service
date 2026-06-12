@@ -13,7 +13,7 @@ from app.room.models import Room
 from app.room.schemas import RoomCreate, RoomResponse
 from app.user.models import User
 
-router = APIRouter(prefix="/rooms", tags=["Rooms"])
+router = APIRouter()
 
 
 @router.get("", response_model=list[RoomAvailabilityResponse])
@@ -21,6 +21,7 @@ async def get_rooms(
     date: date,
     session: AsyncSession = Depends(get_db),
 ):
+    """Эндпоинт для получения списка комнат и их доступности на указанную дату"""
     statement = select(Room).options(selectinload(Room.slots))
     result = await session.execute(statement)
     rooms = result.scalars().all()
@@ -60,13 +61,13 @@ async def get_rooms(
     return response
 
 
-# создание новой комнаты
 @router.post("", response_model=RoomResponse, status_code=status.HTTP_201_CREATED)
 async def create_room(
     room_in: RoomCreate,
     session: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    """Эндпоинт для создания новой переговорной комнаты"""
     if current_user.role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -85,4 +86,5 @@ async def create_room(
     session.add(new_room)
     await session.commit()
     await session.refresh(new_room)
+
     return new_room

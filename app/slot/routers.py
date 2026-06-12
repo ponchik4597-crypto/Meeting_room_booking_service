@@ -9,7 +9,7 @@ from app.slot.models import Slot
 from app.slot.schemas import SlotCreate, SlotResponse
 from app.user.models import User
 
-router = APIRouter(prefix="/slots", tags=["Slots"])
+router = APIRouter()
 
 
 @router.post("", response_model=SlotResponse, status_code=status.HTTP_201_CREATED)
@@ -18,6 +18,7 @@ async def create_slot(
     session: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    """Эндпоинт для создания нового временного слота в переговорной комнате"""
     if current_user.role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
