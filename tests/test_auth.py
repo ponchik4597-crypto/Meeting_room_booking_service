@@ -108,7 +108,7 @@ async def test_get_current_user_user_not_found(db_session):
 
 async def test_get_current_user_token_wrong_secret(db_session, registered_user):
     """Токен, подписанный другим секретом, вызывает 401"""
-    wrong_secret = "wrong_secret_key"
+    wrong_secret = "wrong_very_secret_key_1234567890"
     payload = {"sub": registered_user["login"]}
     expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode = payload.copy()

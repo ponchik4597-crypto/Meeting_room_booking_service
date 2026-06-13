@@ -16,8 +16,8 @@ router = APIRouter()
 )
 async def register_user(user_in: UserCreate, session: AsyncSession = Depends(get_db)):
     """Эндпоинт для регистрации нового пользователя"""
-    stmt = select(User).where(func.lower(User.login) == user_in.login.lower())
-    result = await session.execute(stmt)
+    statement = select(User).where(func.lower(User.login) == user_in.login.lower())
+    result = await session.execute(statement)
     if result.scalar_one_or_none():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

@@ -1,3 +1,4 @@
+from datetime import time
 from typing import AsyncGenerator
 
 import pytest_asyncio
@@ -22,7 +23,7 @@ AsyncSessionTesting = async_sessionmaker(
 
 @pytest_asyncio.fixture(autouse=True, scope="function")
 async def prepare_database():
-    """Создаёт таблицы перед каждым тестом, удаляет после."""
+    """Создаёт таблицы перед каждым тестом, удаляет после"""
     async with engine_test.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     yield
@@ -32,14 +33,14 @@ async def prepare_database():
 
 @pytest_asyncio.fixture(scope="function")
 async def db_session() -> AsyncGenerator[AsyncSession, None]:
-    """Асинхронная сессия БД."""
+    """Асинхронная сессия БД"""
     async with AsyncSessionTesting() as session:
         yield session
 
 
 @pytest_asyncio.fixture(scope="function")
 async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
-    """HTTP клиент с подменой зависимости БД."""
+    """HTTP клиент с подменой зависимости БД"""
 
     async def _get_test_db():
         yield db_session
@@ -65,8 +66,6 @@ async def employee_user(db_session):
     await db_session.commit()
     await db_session.refresh(user)
     yield user
-    await db_session.delete(user)
-    await db_session.commit()
 
 
 @pytest_asyncio.fixture
@@ -75,7 +74,8 @@ async def employee_client(client, employee_user):
     resp = await client.post("/users/login", data=login_data)
     token = resp.json()["access_token"]
     client.headers.update({"Authorization": f"Bearer {token}"})
-    return client
+    yield client
+    client.headers.pop("Authorization", None)
 
 
 @pytest_asyncio.fixture
@@ -89,8 +89,6 @@ async def admin_user(db_session):
     await db_session.commit()
     await db_session.refresh(user)
     yield user
-    await db_session.delete(user)
-    await db_session.commit()
 
 
 @pytest_asyncio.fixture
@@ -99,7 +97,8 @@ async def admin_client(client, admin_user):
     resp = await client.post("/users/login", data=login_data)
     token = resp.json()["access_token"]
     client.headers.update({"Authorization": f"Bearer {token}"})
-    return client
+    yield client
+    client.headers.pop("Authorization", None)
 
 
 @pytest_asyncio.fixture
@@ -109,18 +108,12 @@ async def test_room(db_session):
     await db_session.commit()
     await db_session.refresh(room)
     yield room
-    await db_session.delete(room)
-    await db_session.commit()
 
 
 @pytest_asyncio.fixture
 async def test_slot(db_session, test_room):
-    from datetime import time
-
     slot = Slot(room_id=test_room.id, time_start=time(10, 0), time_end=time(11, 0))
     db_session.add(slot)
     await db_session.commit()
     await db_session.refresh(slot)
     yield slot
-    await db_session.delete(slot)
-    await db_session.commit()

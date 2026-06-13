@@ -16,18 +16,10 @@ poetry run pytest -v
 ```bash
 poetry run uvicorn app.main:app --reload --host 127.0.0.1 --port 8080
 ```
-*Swagger: http://127.0.0*
+*Swagger: http://127.0.0.1:8080/docs*
 
 ## Запуск в Docker
 
-### Вариант 1: Одиночный контейнер (SQLite)
-```bash
-docker build -t booking-app .
-docker run -d -p 8000:8000 --name booking-container booking-app
-```
-*Swagger: http://localhost:8000/docs*
-
-### Вариант 2: Docker Compose (PostgreSQL)
 ```bash
 docker compose up -d --build
 ```
@@ -38,7 +30,7 @@ docker compose up -d --build
 *   `make lint` — проверка стиля кода
 *   `make check` — полная проверка перед коммитом
 
-## Примеры API-запросов (для порта 8080)
+## Примеры API-запросов
 
 **Регистрация:**
 ```bash
